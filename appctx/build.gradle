@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-plugins {
-    id "com.jfrog.bintray" version "1.7.3"
-    id "com.github.dcendents.android-maven" version "1.5"
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'maven-publish'
 
 android {
-    compileSdkVersion projectSdkVersion
-    buildToolsVersion projectBuildToolsVersion
+    compileSdkVersion projectSdk_version
+    buildToolsVersion projectBuildTools_version
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion projectSdkVersion
+        minSdkVersion 14
+        targetSdkVersion projectSdk_version
         versionCode 1
-        versionName libraryVersion
+        versionName library_version
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -42,19 +36,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
 }
 
 dependencies {
-    compile "com.android.support:support-annotations:${supportLibVersion}"
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-}
+    api project(':initprovider')
+    api project(':exceptions')
 
-ext {
-    libraryDesc = "Initializes a val named appCtx you can use anywhere."
+    api "com.android.support:support-annotations:$supportLibs_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 apply from: '../publish.gradle'
-apply from: '../no-version-ranges.gradle'

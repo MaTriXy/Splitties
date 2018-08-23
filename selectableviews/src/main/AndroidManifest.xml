@@ -14,8 +14,4 @@
   ~ limitations under the License.
   -->
 
-<manifest package="xyz.louiscad.selectableviewgroups">
-
-    <application/>
-
-</manifest>
+<manifest package="splitties.selectableviews"/>

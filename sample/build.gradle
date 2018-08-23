@@ -19,12 +19,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion projectSdkVersion
-    buildToolsVersion projectBuildToolsVersion
+    compileSdkVersion projectSdk_version
+    buildToolsVersion projectBuildTools_version
     defaultConfig {
-        applicationId "xyz.louiscad.splittiessample"
+        applicationId "com.louiscad.splittiessample"
         minSdkVersion 14
-        targetSdkVersion projectSdkVersion
+        targetSdkVersion projectSdk_version
         versionCode 1
         versionName "1.0"
         resConfigs "en", "fr"
@@ -40,18 +40,9 @@ android {
         }
     }
     buildTypes {
-        dev {
-            initWith(buildTypes.debug)
-            applicationIdSuffix ".dev"
-            versionNameSuffix "-DEV"
-            minifyEnabled true
-            useProguard false
-        }
         debug {
             applicationIdSuffix ".debug"
             versionNameSuffix "-DEBUG"
-            minifyEnabled true
-            useProguard false
         }
         release {
             minifyEnabled true
@@ -62,61 +53,58 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-
-    packagingOptions {
-        pickFirst "META-INF/appctx_release.kotlin_module"
-    }
 }
 
 dependencies {
     // This project's libraries
-    devCompile project(':appctx')
-    devCompile project(':stetho-init')
-    devCompile project(':concurrency')
-    devCompile project(':preferences')
-    devCompile project(':typesaferecyclerview')
-    devCompile project(':selectableviews')
-    devCompile project(':material-lists')
-
-    debugCompile "xyz.louiscad.splitties:splitties-appctx:$splittiesVersion"
-    debugCompile "xyz.louiscad.splitties:splitties-stetho-init:$splittiesVersion"
-    debugCompile "xyz.louiscad.splitties:splitties-concurrency:$splittiesVersion"
-    debugCompile "xyz.louiscad.splitties:splitties-preferences:$splittiesVersion"
-    debugCompile "xyz.louiscad.splitties:splitties-typesaferecyclerview:$splittiesVersion"
-    debugCompile "xyz.louiscad.splitties:splitties-selectableviews:$splittiesVersion"
-    debugCompile "xyz.louiscad.splitties:splitties-material-lists:$splittiesVersion"
-
-    releaseCompile "xyz.louiscad.splitties:splitties-appctx:$splittiesVersion"
-    releaseCompile "xyz.louiscad.splitties:splitties-concurrency:$splittiesVersion"
-    releaseCompile "xyz.louiscad.splitties:splitties-preferences:$splittiesVersion"
-    releaseCompile "xyz.louiscad.splitties:splitties-typesaferecyclerview:$splittiesVersion"
-    releaseCompile "xyz.louiscad.splitties:splitties-selectableviews:$splittiesVersion"
-    releaseCompile "xyz.louiscad.splitties:splitties-material-lists:$splittiesVersion"
+    implementation project(':activities')
+    implementation project(':alertdialog-appcompat')
+    implementation project(':appctx')
+    implementation project(':arch-lifecycle')
+    implementation project(':arch-room')
+    implementation project(':bitflags')
+    implementation project(':bundle')
+    implementation project(':checkedlazy')
+    implementation project(':collections')
+    implementation project(':exceptions')
+    implementation project(':fragments')
+    implementation project(':fragmentargs')
+    implementation project(':initprovider')
+    implementation project(':intents')
+    implementation project(':material-colors')
+    implementation project(':material-lists')
+    implementation project(':preferences')
+    debugImplementation project(':stetho-init')
+    implementation project(':systemservices')
+    implementation project(':toast')
+    implementation project(':typesaferecyclerview')
+    implementation project(':uithread')
+    implementation project(':viewdsl-appcompat-styles')
+    implementation project(':viewdsl-constraintlayout')
+    implementation project(':viewdsl-design')
+    debugImplementation project(':viewdsl-ide-preview')
+    implementation project(':views-design')
 
     // Android Support Libraries
-    compile "com.android.support:appcompat-v7:$supportLibVersion"
-    compile "com.android.support:design:$supportLibVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibs_version"
+    implementation "com.android.support:design:$supportLibs_version"
 
     // Constraint Layout
-    compile "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayout_version"
 
     // Timber log utility
-    compile "com.jakewharton.timber:timber:$timberVersion"
-
-    compile 'com.dmitrymalkovich.android:material-design-dimens:1.2'
-    compile 'com.actinarium.aligned:aligned:0.1'
+    implementation "com.jakewharton.timber:timber:$timber_version"
 
     // Kotlin
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Kotlinx coroutines
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.14"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutines_version"
 
-    // Tests
-    testCompile 'junit:junit:4.12'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    // Test dependencies
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
 kotlin {
     experimental {
@@ -124,4 +112,4 @@ kotlin {
     }
 }
 
-apply from: '../no-version-ranges.gradle'
+if (isRelease) apply from: '../no-version-ranges.gradle'

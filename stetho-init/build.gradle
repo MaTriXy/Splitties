@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017. Louis Cognault Ayeva Derman
+ * Copyright (c) 2018. Louis Cognault Ayeva Derman
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-plugins {
-    id "com.jfrog.bintray" version "1.7.3"
-    id "com.github.dcendents.android-maven" version "1.5"
-}
-
 apply plugin: 'com.android.library'
-apply plugin: 'maven-publish'
+apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion projectSdkVersion
-    buildToolsVersion projectBuildToolsVersion
-
+    compileSdkVersion projectSdk_version
+    buildToolsVersion projectBuildTools_version
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion projectSdkVersion
+        minSdkVersion 14
+        targetSdkVersion projectSdk_version
         versionCode 1
-        versionName libraryVersion
-
+        versionName library_version
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
         release {
@@ -41,23 +33,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 dependencies {
-    compile 'com.facebook.stetho:stetho:1.5.0'
+    api project(':initprovider')
 
-    compile "com.android.support:support-annotations:${supportLibVersion}"
+    // Android Support Libraries
+    api "com.android.support:support-annotations:$supportLibs_version"
+
+    // Stetho
+    api 'com.facebook.stetho:stetho:1.5.0'
+
+    // Kotlin
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Test dependencies
-    testCompile 'junit:junit:4.12'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-}
-
-ext {
-    libraryDesc = "Initializes Stetho automatically on your debug builds."
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
 
 apply from: '../publish.gradle'
-apply from: '../no-version-ranges.gradle'

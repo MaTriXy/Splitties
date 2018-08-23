@@ -16,9 +16,8 @@
 
 package splitties.init
 
+@Deprecated("Not a good name", ReplaceWith("result.also(f)"))
 inline fun consume(result: Boolean = true, f: () -> Unit): Boolean {
     f()
     return result
 }
-
-internal fun unsupported(errorMessage: String? = null): Nothing = throw UnsupportedOperationException(errorMessage)

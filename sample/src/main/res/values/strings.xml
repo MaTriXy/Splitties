@@ -16,6 +16,8 @@
 
 <resources>
     <string name="app_name">Splitties Sample</string>
+    <string name="lib_name">Splitties</string>
+    <string name="a_lib_by_louiscad">A library by Louis CAD</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -118,5 +120,7 @@
     <string name="subtitle_items_count_hint">There\'s only 2,147,483,647 items.</string>
     <string name="scroll_to_the_end">Scroll to the end</string>
     <string name="toggle_night_mode">Toggle night mode</string>
-    <string name="test_concurrency">Test concurrency</string>
+    <string name="licensed_under_apache_2">Licensed under Apache v2.0</string>
+    <string name="about">About</string>
+    <string name="title_activity_about">@string/about</string>
 </resources>

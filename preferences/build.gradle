@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-plugins {
-    id "com.jfrog.bintray" version "1.7.3"
-    id "com.github.dcendents.android-maven" version "1.5"
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'maven-publish'
 
 android {
-    compileSdkVersion projectSdkVersion
-    buildToolsVersion projectBuildToolsVersion
+    compileSdkVersion projectSdk_version
+    buildToolsVersion projectBuildTools_version
 
     defaultConfig {
-        minSdkVersion 11
-        targetSdkVersion projectSdkVersion
+        minSdkVersion 14
+        targetSdkVersion projectSdk_version
         versionCode 1
-        versionName libraryVersion
+        versionName library_version
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -45,21 +39,25 @@ android {
 }
 
 dependencies {
-    compile "xyz.louiscad.splitties:splitties-appctx:$splittiesVersion"
+    api project(':appctx')
+    api project(':uithread')
+
     // Kotlin
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Kotlinx coroutines
+    compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutines_version"
 
     // Test dependencies
-    testCompile 'junit:junit:4.12'
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
 
-ext {
-    libraryDesc = "Simplifies SharedPreferences usage and organization in Android apps using kotlin."
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
 }
 
 apply from: '../publish.gradle'
-apply from: '../no-version-ranges.gradle'
