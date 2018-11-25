@@ -44,6 +44,10 @@ var TextView.textAppearance: Int
     set(@StyleRes value) = if (SDK_INT < M) setTextAppearance(context, value)
     else setTextAppearance(value)
 
+inline var TextView.lines: Int
+    @Deprecated(NO_GETTER, level = HIDDEN) get() = noGetter
+    set(value) = setLines(value)
+
 fun TextView.centerText() {
     if (SDK_INT >= JELLY_BEAN_MR1) textAlignment = View.TEXT_ALIGNMENT_CENTER
     gravity = Gravity.CENTER
@@ -59,9 +63,11 @@ fun TextView.alignTextToEnd() {
     gravity = Gravity.END
 }
 
-fun TextView.setCompoundDrawables(start: Drawable? = null, top: Drawable? = null,
-                                  end: Drawable? = null, bottom: Drawable? = null,
-                                  intrinsicBounds: Boolean = false) {
+fun TextView.setCompoundDrawables(
+    start: Drawable? = null, top: Drawable? = null,
+    end: Drawable? = null, bottom: Drawable? = null,
+    intrinsicBounds: Boolean = false
+) {
     val left = if (isLtr) start else end
     val right = if (isRtl) start else end
     if (intrinsicBounds) setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom)
@@ -69,8 +75,10 @@ fun TextView.setCompoundDrawables(start: Drawable? = null, top: Drawable? = null
 }
 
 @Suppress("NOTHING_TO_INLINE")
-inline fun TextView.setCompoundDrawables(@DrawableRes start: Int = 0, @DrawableRes top: Int = 0,
-                                         @DrawableRes end: Int = 0, @DrawableRes bottom: Int = 0) {
+inline fun TextView.setCompoundDrawables(
+    @DrawableRes start: Int = 0, @DrawableRes top: Int = 0,
+    @DrawableRes end: Int = 0, @DrawableRes bottom: Int = 0
+) {
     val left = if (isLtr) start else end
     val right = if (isRtl) start else end
     setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom)

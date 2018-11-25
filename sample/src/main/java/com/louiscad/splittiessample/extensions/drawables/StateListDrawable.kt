@@ -58,39 +58,43 @@ import splitties.exceptions.unsupported
  * ## Which one is more readable?
  */
 inline fun drawableStateList(
-        addStates: StateListDrawable.() -> Unit
+    addStates: StateListDrawable.() -> Unit
 ): Drawable = StateListDrawable().apply(addStates)
 
 /**
  * For [state] parameter: see the attr resources starting with **`android.R.attr.state_`**.
+ *
+ * Use minus (`-`) for [state] = false.
  */
 inline fun <D : Drawable> StateListDrawable.addForState(
-        newDrawableRef: () -> D,
-        @AttrRes state: Int,
-        drawableConfig: D.() -> Unit
+    newDrawableRef: () -> D,
+    @AttrRes state: Int,
+    drawableConfig: D.() -> Unit
 ) = addState(intArrayOf(state), newDrawableRef().apply(drawableConfig))
 
 /**
  * For [stateSet] parameter: see the attr resources starting with **`android.R.attr.state_`**.
+ *
+ * Use minus (`-`) for state = false in [stateSet] values.
  */
 inline fun <D : Drawable> StateListDrawable.addForStates(
-        newDrawableRef: () -> D,
-        @AttrRes vararg stateSet: Int,
-        drawableConfig: D.() -> Unit
+    newDrawableRef: () -> D,
+    @AttrRes vararg stateSet: Int,
+    drawableConfig: D.() -> Unit
 ) = addState(stateSet, newDrawableRef().apply(drawableConfig))
 
 inline fun <D : Drawable> StateListDrawable.addForRemainingStates(
-        newDrawableRef: () -> D,
-        drawableConfig: D.() -> Unit
+    newDrawableRef: () -> D,
+    drawableConfig: D.() -> Unit
 ) = addState(StateSet.WILD_CARD, newDrawableRef().apply(drawableConfig))
 
 @Deprecated(
-        "Using addForStates with empty state set is misleading",
-        ReplaceWith("addForRemainingStates(newDrawableRef, drawableConfig)"),
-        level = DeprecationLevel.ERROR
-)
+    "Using addForStates with empty state set is misleading",
+    ReplaceWith("addForRemainingStates(newDrawableRef, drawableConfig)"),
+    level = DeprecationLevel.ERROR
+) // FOOL GUARD, DO NOT REMOVE
 @Suppress("unused")
 inline fun <D : Drawable> StateListDrawable.addForStates(
-        newDrawableRef: () -> D,
-        drawableConfig: D.() -> Unit
+    newDrawableRef: () -> D,
+    drawableConfig: D.() -> Unit
 ): Nothing = unsupported()

@@ -22,27 +22,27 @@ import android.view.ViewGroup
 import com.louiscad.splittiessample.R
 import splitties.material.lists.IconTwoLinesSwitchListItem
 import splitties.typesaferecyclerview.ItemViewHolder
-import splitties.viewdsl.recyclerview.verticalListLayoutParams
+import splitties.views.dsl.recyclerview.verticalListLayoutParams
 import splitties.views.imageResource
 import splitties.views.onClick
 import splitties.views.recyclerview.verticalLayoutManager
 import splitties.views.textResource
 
 class DemoAdapter(
-        private val host: DemoViewHolder.Host
+    private val host: DemoViewHolder.Host
 ) : RecyclerView.Adapter<DemoAdapter.DemoViewHolder>() {
     val layoutManager = verticalLayoutManager()
 
     private val items = arrayOf(
-            DemoItem(
-                    R.string.title_feature_not_bug,
-                    R.string.bug_marketing_definition,
-                    R.drawable.ic_bug_report_white_24dp
-            )
+        DemoItem(
+            R.string.title_feature_not_bug,
+            R.string.bug_marketing_definition,
+            R.drawable.ic_bug_report_white_24dp
+        )
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DemoViewHolder(
-            parent.context, layoutManager, host
+        parent.context, layoutManager, host
     )
 
     override fun onBindViewHolder(holder: DemoViewHolder, position: Int) {
@@ -54,11 +54,11 @@ class DemoAdapter(
     }
 
     class DemoViewHolder(
-            ctx: Context,
-            layoutManager: RecyclerView.LayoutManager,
-            host: Host
+        ctx: Context,
+        layoutManager: RecyclerView.LayoutManager,
+        host: Host
     ) : ItemViewHolder<DemoItem, IconTwoLinesSwitchListItem, DemoViewHolder.Host>(
-            host, IconTwoLinesSwitchListItem(ctx)
+        host, IconTwoLinesSwitchListItem(ctx)
     ) {
 
         init {

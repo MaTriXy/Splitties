@@ -25,9 +25,9 @@ import splitties.init.appCtx
 typealias DbConfig<DB> = RoomDatabase.Builder<DB>.() -> Unit
 
 inline fun <reified DB : RoomDatabase> roomDb(
-        ctx: Context,
-        name: String,
-        config: DbConfig<DB> = {}
+    ctx: Context,
+    name: String,
+    config: DbConfig<DB> = {}
 ): DB = Room.databaseBuilder(ctx, DB::class.java, name).apply(config).build()
 
 inline fun <reified DB : RoomDatabase> roomDb(name: String, config: DbConfig<DB> = {}): DB {
@@ -51,14 +51,14 @@ inline fun <DB : RoomDatabase, R> DB.inTransaction(body: (db: DB) -> R): R = try
     endTransaction()
 }
 
-fun RoomDatabase.Builder<*>.onCreate(block: (db: SupportSQLiteDatabase) -> Unit) {
-    addCallback(object: RoomDatabase.Callback() {
+inline fun RoomDatabase.Builder<*>.onCreate(crossinline block: (db: SupportSQLiteDatabase) -> Unit) {
+    addCallback(object : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) = block(db)
     })
 }
 
-fun RoomDatabase.Builder<*>.onOpen(block: (db: SupportSQLiteDatabase) -> Unit) {
-    addCallback(object: RoomDatabase.Callback() {
+inline fun RoomDatabase.Builder<*>.onOpen(crossinline block: (db: SupportSQLiteDatabase) -> Unit) {
+    addCallback(object : RoomDatabase.Callback() {
         override fun onOpen(db: SupportSQLiteDatabase) = block(db)
     })
 }

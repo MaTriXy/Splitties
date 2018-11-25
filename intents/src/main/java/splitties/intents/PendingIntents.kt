@@ -31,9 +31,9 @@ import splitties.init.appCtx
  * @param options are ignored below API 16.
  */
 fun Intent.toPendingActivity(
-        reqCode: Int = 0,
-        flags: Int = 0,
-        options: Bundle? = null
+    reqCode: Int = 0,
+    flags: Int = 0,
+    options: Bundle? = null
 ): PendingIntent = if (SDK_INT >= JELLY_BEAN) {
     PendingIntent.getActivity(appCtx, reqCode, this, flags, options)
 } else PendingIntent.getActivity(appCtx, reqCode, this, flags)
@@ -41,10 +41,23 @@ fun Intent.toPendingActivity(
 /**
  * @param reqCode Can be left to default (0) if this [PendingIntent] is unique as defined from
  * [Intent.filterEquals].
+ * @param options are ignored below API 16.
+ */
+fun Array<Intent>.toPendingActivities(
+    reqCode: Int = 0,
+    flags: Int = 0,
+    options: Bundle? = null
+): PendingIntent = if (SDK_INT >= JELLY_BEAN) {
+    PendingIntent.getActivities(appCtx, reqCode, this, flags, options)
+} else PendingIntent.getActivities(appCtx, reqCode, this, flags)
+
+/**
+ * @param reqCode Can be left to default (0) if this [PendingIntent] is unique as defined from
+ * [Intent.filterEquals].
  */
 fun Intent.toPendingForegroundService(
-        reqCode: Int = 0,
-        flags: Int = 0
+    reqCode: Int = 0,
+    flags: Int = 0
 ): PendingIntent = if (SDK_INT >= O) {
     PendingIntent.getForegroundService(appCtx, reqCode, this, flags)
 } else toPendingService(reqCode, flags)
@@ -54,8 +67,8 @@ fun Intent.toPendingForegroundService(
  * [Intent.filterEquals].
  */
 inline fun Intent.toPendingService(
-        reqCode: Int = 0,
-        flags: Int = 0
+    reqCode: Int = 0,
+    flags: Int = 0
 ): PendingIntent = PendingIntent.getService(appCtx, reqCode, this, flags)
 
 /**
@@ -63,6 +76,6 @@ inline fun Intent.toPendingService(
  * [Intent.filterEquals].
  */
 inline fun Intent.toPendingBroadcast(
-        reqCode: Int = 0,
-        flags: Int = 0
+    reqCode: Int = 0,
+    flags: Int = 0
 ): PendingIntent = PendingIntent.getBroadcast(appCtx, reqCode, this, flags)

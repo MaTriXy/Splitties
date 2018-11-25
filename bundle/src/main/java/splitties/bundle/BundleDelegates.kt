@@ -19,7 +19,7 @@ package splitties.bundle
 
 import android.os.Bundle
 import splitties.exceptions.illegal
-import splitties.uithread.isUiThread
+import splitties.mainthread.isMainThread
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -43,16 +43,14 @@ fun <T> BundleSpec.bundleOrNull(key: String): ReadWriteProperty<BundleSpec, T?> 
 }
 
 private val BundleSpec.bundle: Bundle
-    get() = (if (isUiThread) currentBundle else bundleByThread.get())
-            ?: illegal("Bundle property accessed outside with() function! Thread: $currentThread")
+    get() = (if (isMainThread) currentBundle else bundleByThread.get())
+        ?: illegal("Bundle property accessed outside with() function! Thread: $currentThread")
 
 private object BundleDelegate : ReadWriteProperty<BundleSpec, Any> {
 
     override operator fun getValue(thisRef: BundleSpec, property: KProperty<*>): Any {
         val key = property.name
-        return thisRef.bundle[key].also {
-            checkNotNull(it) { "Property $key could not be read" }
-        }
+        return checkNotNull(thisRef.bundle[key]) { "Property $key could not be read" }
     }
 
     override operator fun setValue(thisRef: BundleSpec, property: KProperty<*>, value: Any) {
@@ -72,7 +70,7 @@ private object BundleOrNullDelegate : ReadWriteProperty<BundleSpec, Any?> {
 }
 
 private class BundleOrDefaultDelegate<T : Any>(
-        private val defaultValue: T
+    private val defaultValue: T
 ) : ReadWriteProperty<BundleSpec, T> {
 
     override operator fun getValue(thisRef: BundleSpec, property: KProperty<*>): T {
@@ -85,7 +83,7 @@ private class BundleOrDefaultDelegate<T : Any>(
 }
 
 private class BundleOrElseDelegate<T : Any>(
-        private val defaultValue: () -> T
+    private val defaultValue: () -> T
 ) : ReadWriteProperty<BundleSpec, T> {
 
     override operator fun getValue(thisRef: BundleSpec, property: KProperty<*>): T {
@@ -98,8 +96,9 @@ private class BundleOrElseDelegate<T : Any>(
 }
 
 private class ExplicitBundleDelegate<T>(
-        private val key: String,
-        private val noNull: Boolean) : ReadWriteProperty<BundleSpec, T> {
+    private val key: String,
+    private val noNull: Boolean
+) : ReadWriteProperty<BundleSpec, T> {
 
     override operator fun getValue(thisRef: BundleSpec, property: KProperty<*>): T {
         return thisRef.bundle[key].also {

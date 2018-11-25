@@ -26,9 +26,11 @@ import kotlin.reflect.KProperty
 
 @SuppressLint("CommitPrefEdits")
 @Suppress("NOTHING_TO_INLINE")
-abstract class Preferences(name: String,
-                           availableAtDirectBoot: Boolean = false,
-                           mode: Int = Context.MODE_PRIVATE) {
+abstract class Preferences(
+    name: String,
+    availableAtDirectBoot: Boolean = false,
+    mode: Int = Context.MODE_PRIVATE
+) {
 
     protected val prefs: SharedPreferences
 
@@ -52,45 +54,56 @@ abstract class Preferences(name: String,
 
     operator fun contains(o: Any) = prefs === o
 
-    protected fun boolPref(defaultValue: Boolean = false)
-            = BoolPref(key = PROP_NAME, defaultValue = defaultValue)
+    protected fun boolPref(
+        defaultValue: Boolean = false
+    ) = BoolPref(key = PROP_NAME, defaultValue = defaultValue)
 
     protected fun intPref(defaultValue: Int) = IntPref(key = PROP_NAME, defaultValue = defaultValue)
-    protected fun floatPref(defaultValue: Float) = FloatPref(key = PROP_NAME, defaultValue = defaultValue)
-    protected fun longPref(defaultValue: Long) = LongPref(key = PROP_NAME, defaultValue = defaultValue)
+    protected fun floatPref(
+        defaultValue: Float
+    ) = FloatPref(key = PROP_NAME, defaultValue = defaultValue)
 
-    protected fun stringPref(defaultValue: String) = StringPref(key = PROP_NAME, defaultValue = defaultValue)
+    protected fun longPref(
+        defaultValue: Long
+    ) = LongPref(key = PROP_NAME, defaultValue = defaultValue)
 
-    protected fun stringOrNullPref(defaultValue: String? = null) =
-            StringOrNullPref(key = PROP_NAME, defaultValue = defaultValue)
+    protected fun stringPref(
+        defaultValue: String
+    ) = StringPref(key = PROP_NAME, defaultValue = defaultValue)
 
-    protected fun stringSetPref(defaultValue: Set<String>) =
-            StringSetPref(key = PROP_NAME, defaultValue = defaultValue)
+    protected fun stringOrNullPref(
+        defaultValue: String? = null
+    ) = StringOrNullPref(key = PROP_NAME, defaultValue = defaultValue)
 
-    protected fun stringSetOrNullPref(defaultValue: Set<String>? = null) =
-            StringSetOrNullPref(key = PROP_NAME, defaultValue = defaultValue)
+    protected fun stringSetPref(
+        defaultValue: Set<String>
+    ) = StringSetPref(key = PROP_NAME, defaultValue = defaultValue)
 
-    private var edit = false
+    protected fun stringSetOrNullPref(
+        defaultValue: Set<String>? = null
+    ) = StringSetOrNullPref(key = PROP_NAME, defaultValue = defaultValue)
+
+    private var isEditing = false
     private var useCommit = false
     private var useCommitForEdit = false
 
     fun beginEdit(blocking: Boolean = false) {
         useCommitForEdit = blocking
-        edit = true
+        isEditing = true
     }
 
     fun endEdit() {
         if (useCommitForEdit) editor.commit() else editor.apply()
-        edit = false
+        isEditing = false
     }
 
     fun abortEdit() {
         editor = editor // Invalidates the editor stored in the delegate
-        edit = false
+        isEditing = false
     }
 
     private fun SharedPreferences.Editor.attemptApply() {
-        if (edit) return
+        if (isEditing) return
         if (useCommit) commit() else apply()
     }
 
@@ -138,7 +151,7 @@ abstract class Preferences(name: String,
 
     protected inner class StringPref(val key: String, val defaultValue: String) {
         operator fun getValue(thisRef: Preferences, prop: KProperty<*>): String {
-            return prefs.getString(key.real(prop), defaultValue)
+            return prefs.getString(key.real(prop), defaultValue)!!
         }
 
         operator fun setValue(thisRef: Preferences, prop: KProperty<*>, value: String) {
@@ -158,7 +171,7 @@ abstract class Preferences(name: String,
 
     protected inner class StringSetPref(val key: String, val defaultValue: Set<String>) {
         operator fun getValue(thisRef: Preferences, prop: KProperty<*>): Set<String> {
-            return prefs.getStringSet(key.real(prop), defaultValue)
+            return prefs.getStringSet(key.real(prop), defaultValue)!!
         }
 
         operator fun setValue(thisRef: Preferences, prop: KProperty<*>, value: Set<String>) {
@@ -166,8 +179,10 @@ abstract class Preferences(name: String,
         }
     }
 
-    protected inner class StringSetOrNullPref(val key: String,
-                                              val defaultValue: Set<String>? = null) {
+    protected inner class StringSetOrNullPref(
+        val key: String,
+        val defaultValue: Set<String>? = null
+    ) {
         operator fun getValue(thisRef: Preferences, prop: KProperty<*>): Set<String>? {
             return prefs.getStringSet(key.real(prop), defaultValue)
         }

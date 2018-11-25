@@ -18,38 +18,45 @@ package splitties.bundle
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import splitties.uithread.isUiThread
-import kotlin.DeprecationLevel.ERROR
-
-@Deprecated("Name changed.", ReplaceWith("BundleSpec", "splitties.bundle.BundleSpec"), ERROR)
-typealias BundleHelper = BundleSpec
+import splitties.mainthread.isMainThread
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 inline fun <Spec : BundleSpec, R> Activity.withExtras(
-        spec: Spec,
-        crossinline block: Spec.() -> R
-): R = intent.extras.with(spec, block)
+    spec: Spec,
+    crossinline block: Spec.() -> R
+): R {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+    return intent.extras.with(spec, block)
+}
 
 inline fun <Spec : BundleSpec> Intent.putExtras(
-        spec: Spec,
-        crossinline block: Spec.() -> Unit
+    spec: Spec,
+    crossinline block: Spec.() -> Unit
 ) {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
     replaceExtras((extras ?: Bundle()).apply { with(spec, block) })
 }
 
 inline fun <Spec : BundleSpec, R> Bundle.with(
-        spec: Spec,
-        crossinline block: Spec.() -> R
-): R = try {
-    this.putIn(spec)
-    spec.block()
-} finally {
-    removeBundleFrom(spec)
+    spec: Spec,
+    crossinline block: Spec.() -> R
+): R {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+    return try {
+        this.putIn(spec)
+        spec.block()
+    } finally {
+        removeBundleFrom(spec)
+    }
 }
 
-@PublishedApi internal fun Bundle.putIn(spec: BundleSpec) {
-    if (isUiThread) spec.currentBundle = this else spec.bundleByThread.set(this)
+@PublishedApi
+internal fun Bundle.putIn(spec: BundleSpec) {
+    if (isMainThread) spec.currentBundle = this else spec.bundleByThread.set(this)
 }
 
-@PublishedApi internal fun removeBundleFrom(spec: BundleSpec) {
-    if (isUiThread) spec.currentBundle = null else spec.bundleByThread.remove()
+@PublishedApi
+internal fun removeBundleFrom(spec: BundleSpec) {
+    if (isMainThread) spec.currentBundle = null else spec.bundleByThread.remove()
 }

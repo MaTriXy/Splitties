@@ -17,9 +17,10 @@
 package splitties.checkedlazy
 
 import splitties.exceptions.illegal
-import splitties.uithread.checkUiThread
+import splitties.mainthread.checkMainThread
 
-@JvmField internal val uiChecker = { checkUiThread() }
+@JvmField
+internal val mainThreadChecker = { checkMainThread() }
 
 /**
  * Throws an [IllegalStateException] if invoked outside of passed [thread].
