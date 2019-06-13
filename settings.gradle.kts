@@ -1,61 +1,73 @@
+@file:Suppress("SpellCheckingInspection")
+
 /*
- * Copyright (c) 2016. Louis Cognault Ayeva Derman
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2019 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
  */
 
-include(
-        ":activities",
-        ":alertdialog",
-        ":alertdialog-appcompat",
-        ":appctx",
-        ":arch-lifecycle",
-        ":arch-room",
-        ":bitflags",
-        ":bundle",
-        ":checkedlazy",
-        ":collections",
-        ":dimensions",
-        ":exceptions",
-        ":experimental",
-        ":fragmentargs",
-        ":fragments",
-        ":initprovider",
-        ":intents",
-        ":mainhandler",
-        ":mainthread",
-        ":material-colors",
-        ":material-lists",
-        ":preferences",
-        ":resources",
-        ":sample",
-        ":snackbar",
-        ":stetho-init",
-        ":systemservices",
-        ":toast",
-        ":typesaferecyclerview",
-        ":views",
-        ":views-appcompat",
-        ":views-cardview",
-        ":views-design",
-        ":views-dsl",
-        ":views-dsl-appcompat",
-        ":views-dsl-constraintlayout",
-        ":views-dsl-design",
-        ":views-dsl-ide-preview",
-        ":views-dsl-recyclerview",
-        ":views-recyclerview",
-        ":views-selectable",
-        ":views-selectable-appcompat",
-        ":views-selectable-constraintlayout"
-)
+arrayOf(
+    ":activities",
+    ":alertdialog",
+    ":alertdialog-appcompat",
+    ":alertdialog-appcompat-coroutines",
+    ":appctx",
+    ":arch-lifecycle",
+    ":arch-room",
+    ":bitflags",
+    ":bundle",
+    ":checkedlazy",
+    ":collections",
+    ":dimensions",
+    ":exceptions",
+    ":experimental",
+    ":fragmentargs",
+    ":fragments",
+    ":initprovider",
+    ":intents",
+    ":lifecycle-coroutines",
+    ":mainhandler",
+    ":mainthread",
+    ":material-colors",
+    ":material-lists",
+    ":permissions",
+    ":preferences",
+    ":resources",
+    ":snackbar",
+    ":stetho-init",
+    ":systemservices",
+    ":toast",
+    ":typesaferecyclerview",
+    ":views",
+    ":views-coroutines",
+    ":views-coroutines-material",
+    ":views-appcompat",
+    ":views-cardview",
+    ":views-dsl",
+    ":views-dsl-appcompat",
+    ":views-dsl-constraintlayout",
+    ":views-dsl-coordinatorlayout",
+    ":views-dsl-ide-preview",
+    ":views-dsl-material",
+    ":views-dsl-recyclerview",
+    ":views-material",
+    ":views-recyclerview",
+    ":views-selectable",
+    ":views-selectable-appcompat",
+    ":views-selectable-constraintlayout"
+).forEach { include(":modules$it") }
+
+arrayOf(
+    "android-base",
+    "android-base-with-views-dsl",
+    "android-appcompat",
+    "android-appcompat-with-views-dsl",
+    "android-material-components",
+    "android-material-components-with-views-dsl"
+).forEach { include(":fun-packs:$it") }
+
+arrayOf(
+    "android-app"
+).forEach { include(":samples:$it") }
+
+include(":tests")
+
+enableFeaturePreview("GRADLE_METADATA")
