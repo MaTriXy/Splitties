@@ -2,11 +2,19 @@
 
 *ConstraintLayout extension of [Views DSL](../views-dsl).*
 
+Supported platforms: **Android**.
+
+## Setup
+
+If you want to use this dependency without using one of the [fun packs](../../README.md#download),
+you can use `Splitties.viewsDslConstraintlayout`, provided you have [refreshVersions](https://github.com/jmfayard/refreshVersions) added to the project.
+
+For reference, the maven coordinates of this module are `com.louiscad.splitties:splitties-views-dsl-constraintlayout`.
+
 ## Table of contents
 
 * [`ConstraintLayout` tailored `lParams` extension](#constraintlayout-tailored-lparams-extension)
 * [`ConstraintLayout.LayoutParams` extensions for safe and readable usage](#constraintlayoutlayoutparams-extensions-for-safe-and-readable-usage)
-* [Download](#download)
 
 ## `ConstraintLayout` tailored `lParams` extension
 
@@ -26,20 +34,20 @@ result is a more readable UI code, without performance compromises.
 ## `ConstraintLayout.LayoutParams` extensions for safe and readable usage
 
 With this split also comes a set of extension functions to use in
-`lParams(…) { … }`.
+`lParams(…) { … }`. Almost all of them have optional `margin` and `goneMargin` parameters.
 
 Center relatively to parent:
-* `centerHorizontally()`
-* `centerVertically()`
-* `centerInParent()`
+* `centerHorizontally(…)`
+* `centerVertically(…)`
+* `centerInParent(…)`
 
 Parent relative constraints:
-* `topOfParent()`
-* `bottomOfParent()`
-* `startOfParent()`
-* `endOfParent()`
-* `leftOfParent()`
-* `rightOfParent()`
+* `topOfParent(…)`
+* `bottomOfParent(…)`
+* `startOfParent(…)`
+* `endOfParent(…)`
+* `leftOfParent(…)`
+* `rightOfParent(…)`
 
 Center relatively to another `View`:
 * `alignVerticallyOn(…)`
@@ -47,6 +55,10 @@ Center relatively to another `View`:
 * `centerOn(…)`
 
 View relative constraints:
+* `above(…)` (alias to `bottomToTopOf(…)`)
+* `below(…)` (alias to `topToBottomOf(…)`)
+* `before(…)` (alias to `endToStartOf(…)`)
+* `after(…)` (alias to `startToEndOf(…)`)
 * `topToTopOf(…)`
 * `topToBottomOf(…)`
 * `bottomToTopOf(…)`
@@ -86,9 +98,3 @@ xml defined ids on some views that need to have their state saved (e.g.
 a `RecyclerView`, an `EditText` or a `CheckBox`) in the same layout.
 
 Note that `View` ids are crucial to `ConstraintLayout` machinery.
-
-## Download
-
-```groovy
-implementation("com.louiscad.splitties:splitties-views-dsl-constraintlayout:$splitties_version")
-```

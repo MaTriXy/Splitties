@@ -2,6 +2,15 @@
 
 *Material Components extension of [Views DSL](../views-dsl)*
 
+Supported platforms: **Android**.
+
+## Setup
+
+If you want to use this dependency without using one of the [fun packs](../../README.md#download),
+you can use `Splitties.viewsDslMaterial`, provided you have [refreshVersions](https://github.com/jmfayard/refreshVersions) added to the project.
+
+For reference, the maven coordinates of this module are `com.louiscad.splitties:splitties-views-dsl-material`.
+
 ## Table of contents
 
 * [Functions to instantiate Views and ViewGroups from Material Components](#functions-to-instantiate-views-and-viewgroups-from-material-components)
@@ -22,7 +31,6 @@
   * [`bottomSheetBehavior`](#bottomsheetbehavior)
   * [Bottom sheet state extensions](#bottom-sheet-state-extensions)
 * [TextInputLayout helper](#textinputlayout-helper)
-* [Download](#download)
 
 ## Functions to instantiate Views and ViewGroups from Material Components
 
@@ -42,16 +50,21 @@ handles config changes.
 
 ### Multi-process apps
 
-If your app needs to use AppCompat themed widgets in a non default process, you'll need to
-manually setup ViewFactory so it uses AppCompat. Here's how you need to it: Copy paste
-[this InitProvider](
-src/androidMain/kotlin/splitties/views/dsl/material/experimental/MaterialViewInstantiatorInjectProvider.kt
-) into a package of an android library/app module of your project, then declare it in the
-`AndroidManifest.xml` of the module exactly like it is done [here](
-src/androidMain/AndroidManifest.xml
-). To do so, copy paste it, then fix the package of the class under the `android:name` xml attribute
-of the `provider` tag, then specify the `android:process` value to the one of your non default
-process.
+If your app needs to use Material themed widgets in the non default process, you'll need to
+manually setup ViewFactory, so it uses Material Components.
+
+Here's how you need to do it:
+1. Copy and paste
+   [this Initializer](
+   src/androidMain/kotlin/splitties/views/dsl/material/experimental/MaterialViewInstantiatorInjecter.kt
+   ) into a package of an android library/app module of your project
+2. Create an internal subclass of `androidx.startup.InitializationProvider`
+4. Declare that subclass in the
+   `AndroidManifest.xml` of the module exactly like it is done [here](
+   src/androidMain/AndroidManifest.xml
+   ). To do so, copy and paste it, then fix the package of the class under the `android:name` xml attribute
+   of the `provider` tag, specify the `android:process` value to the one of your non default
+   process, and finally changed the `android:name` xml attribute of the `meta-data` tag to the initializer you copied in the first step.
 
 Be sure to test it to make sure you have set it up properly.
 
@@ -83,7 +96,7 @@ and a default height of `wrapContent` so you don't have to specify them in
 most of the cases.
 
 It also has a `scrollFlags` parameter which defaults to `ENTER_ALWAYS`, same
-as when inflated from an xml layout. 
+as when inflated from an xml layout.
 
 Use it when you add a `View` to an `AppBarLayout`.
 
@@ -162,9 +175,3 @@ used for the `TextInputEditText` that it creates and adds to the layout.
 
 The id is required so the content of the user input is saved in instance
 state even if the host Activity is killed by the system.
-
-## Download
-
-```groovy
-implementation("com.louiscad.splitties:splitties-views-dsl-material:$splitties_version")
-```

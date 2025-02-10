@@ -1,7 +1,7 @@
 /*
- * Copyright 2019 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2019-2023 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
  */
-@file:Suppress("NOTHING_TO_INLINE")
+@file:Suppress("nothing_to_inline")
 
 package splitties.intents
 
@@ -16,9 +16,9 @@ import splitties.init.appCtx
  * [Intent.filterEquals].
  * @param options are ignored below API 16.
  */
-fun Intent.toPendingActivity(
+inline fun Intent.toPendingActivity(
     reqCode: Int = 0,
-    flags: Int = 0,
+    flags: Int,
     options: Bundle? = null
 ): PendingIntent = if (SDK_INT >= 16) {
     PendingIntent.getActivity(appCtx, reqCode, this, flags, options)
@@ -29,9 +29,9 @@ fun Intent.toPendingActivity(
  * [Intent.filterEquals].
  * @param options are ignored below API 16.
  */
-fun Array<Intent>.toPendingActivities(
+inline fun Array<Intent>.toPendingActivities(
     reqCode: Int = 0,
-    flags: Int = 0,
+    flags: Int,
     options: Bundle? = null
 ): PendingIntent = if (SDK_INT >= 16) {
     PendingIntent.getActivities(appCtx, reqCode, this, flags, options)
@@ -43,7 +43,7 @@ fun Array<Intent>.toPendingActivities(
  */
 fun Intent.toPendingForegroundService(
     reqCode: Int = 0,
-    flags: Int = 0
+    flags: Int
 ): PendingIntent = if (SDK_INT >= 26) {
     PendingIntent.getForegroundService(appCtx, reqCode, this, flags)
 } else toPendingService(reqCode, flags)
@@ -54,7 +54,7 @@ fun Intent.toPendingForegroundService(
  */
 inline fun Intent.toPendingService(
     reqCode: Int = 0,
-    flags: Int = 0
+    flags: Int
 ): PendingIntent = PendingIntent.getService(appCtx, reqCode, this, flags)
 
 /**
@@ -63,5 +63,5 @@ inline fun Intent.toPendingService(
  */
 inline fun Intent.toPendingBroadcast(
     reqCode: Int = 0,
-    flags: Int = 0
+    flags: Int
 ): PendingIntent = PendingIntent.getBroadcast(appCtx, reqCode, this, flags)

@@ -1,42 +1,56 @@
 /*
- * Copyright 2019 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2019-2021 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
  */
 
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
-    `maven-publish`
-    id("com.jfrog.bintray")
+    publish
 }
 
 android {
     setDefaults()
+    namespace = "splitties.preferences"
     buildTypes.getByName("release").consumerProguardFiles("proguard-rules.pro")
 }
 
 kotlin {
-    metadataPublication(project)
-    androidWithPublication(project)
-    sourceSets {
-        getByName("commonMain").dependencies {
-            api(splitties("experimental"))
-        }
-        getByName("androidMain").dependencies {
-            api(splitties("appctx"))
-            api(splitties("mainthread"))
+    androidTarget()
 
-            api(Libs.kotlin.stdlibJdk7)
-            compileOnly(Libs.kotlinX.coroutines.android)
+    macosX64()
+    iosArm64(); iosX64()
+    watchosArm32(); watchosArm64()
+
+    configure(targets) { configureMavenPublication() }
+    common {
+        dependencies {
+            api(splitties("experimental"))
+            api(KotlinX.coroutines.core)
+            implementation(splitties("mainthread"))
+        }
+        "allButAndroid" {
+            "darwin" {
+                "macosX64"()
+                "iosArm64"(); "iosX64"()
+                "watchosArm32"(); "watchosArm64"()
+            }
+        }
+        "android" {
+            dependencies {
+                api(splitties("appctx"))
+                api(AndroidX.dataStore.preferences)
+                implementation(KotlinX.coroutines.android)
+            }
+        }
+        "commonTest" {
+            dependencies {
+                implementation(project(":test-helpers"))
+            }
         }
     }
 }
 
-afterEvaluate {
-    publishing {
-        setupAllPublications(project)
-    }
-
-    bintray {
-        setupPublicationsUpload(project, publishing, skipMetadataPublication = true)
-    }
+dependencies {
+    androidTestImplementation(AndroidX.test.runner)
+    testImplementation(Testing.robolectric)
 }

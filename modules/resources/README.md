@@ -3,6 +3,15 @@
 *Extensions to get resources like strings, colors or drawables easily,
 with support for themed attributes.*
 
+Supported platforms: **Android**.
+
+## Setup
+
+If you want to use this dependency without using one of the [fun packs](../../README.md#download),
+you can use `Splitties.resources`, provided you have [refreshVersions](https://github.com/jmfayard/refreshVersions) added to the project.
+
+For reference, the maven coordinates of this module are `com.louiscad.splitties:splitties-resources`.
+
 ## Content
 
 All the extensions of this module are currently available on
@@ -70,8 +79,10 @@ There's also optional format arguments.
 * `styledTxtArray(…)` takes an array theme attribute and returns an
 `Array<out CharSequence>?`
 
-## Download
+### Any resource type
 
-```groovy
-implementation("com.louiscad.splitties:splitties-resources:$splitties_version")
-```
+The `resolveThemeAttribute` extension function for `Context` takes a resource id of
+type `R.attr` and returns its corresponding resource id as resolved from the current
+theme in the `Context`.
+
+That means it won't work with theme attributes whose corresponding values in the given theme are declared inline (and unlike the `styledXxx` functions which support this case).

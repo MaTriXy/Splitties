@@ -1,46 +1,35 @@
 /*
- * Copyright 2019 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2019-2021 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
  */
 
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
-    `maven-publish`
-    id("com.jfrog.bintray")
+    publish
 }
 
 android {
     setDefaults()
+    namespace = "splitties.views.dsl.appcompat"
 }
 
 kotlin {
-    metadataPublication(project)
-    androidWithPublication(project)
+    androidTarget()
+
+    configure(targets) { configureMavenPublication() }
     sourceSets {
-        getByName("androidMain").dependencies {
+        androidMain.dependencies {
             api(splitties("views-dsl"))
             api(splitties("views-appcompat"))
-            api(splitties("initprovider"))
-            api(Libs.kotlin.stdlibJdk7)
-            api(Libs.androidX.annotation)
-            api(Libs.androidX.appCompat)
+            implementation(AndroidX.startup.runtime)
+            api(AndroidX.annotation)
+            api(AndroidX.appCompat)
         }
-        matching { it.name.startsWith("android") }.all {
+        all {
             languageSettings.apply {
-                enableLanguageFeature("InlineClasses")
-                useExperimentalAnnotation("kotlin.contracts.ExperimentalContracts")
-                useExperimentalAnnotation("splitties.experimental.InternalSplittiesApi")
+                optIn("kotlin.contracts.ExperimentalContracts")
+                optIn("splitties.experimental.InternalSplittiesApi")
             }
         }
-    }
-}
-
-afterEvaluate {
-    publishing {
-        setupAllPublications(project)
-    }
-
-    bintray {
-        setupPublicationsUpload(project, publishing, skipMetadataPublication = true)
     }
 }

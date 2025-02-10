@@ -1,34 +1,22 @@
 /*
- * Copyright 2019 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2019-2021 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
  */
 
 plugins {
     kotlin("multiplatform")
-    `maven-publish`
-    id("com.jfrog.bintray")
+    publish
 }
 
 kotlin {
-    metadataPublication(project)
-    jvmWithPublication(project)
-    jsWithPublication(project)
-    sourceSets {
-        getByName("commonMain").dependencies {
-            api(kotlin("stdlib-common"))
-        }
-        getByName("jvmMain").dependencies {
-            api(kotlin("stdlib-jdk7"))
-        }
-        getByName("jsMain").dependencies {
-            api(kotlin("stdlib-js"))
-        }
-    }
-}
+    jvm()
+    js { browser(); nodejs() }
 
-publishing {
-    setupAllPublications(project)
-}
+    macosX64()
+    iosArm64(); iosX64()
+    watchosArm32(); watchosArm64()
 
-bintray {
-    setupPublicationsUpload(project, publishing)
+    linux(x64 = true)
+    mingw(x64 = true)
+
+    configure(targets) { configureMavenPublication() }
 }

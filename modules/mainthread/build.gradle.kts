@@ -1,34 +1,44 @@
 /*
- * Copyright 2019 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2019-2021 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
  */
 
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
-    `maven-publish`
-    id("com.jfrog.bintray")
+    publish
 }
 
 android {
     setDefaults()
+    namespace = "splitties.mainthread"
 }
 
 kotlin {
-    metadataPublication(project)
-    androidWithPublication(project)
-    sourceSets {
-        getByName("androidMain").dependencies {
-            api(Libs.kotlin.stdlibJdk7)
+    androidTarget()
+    js { browser(); nodejs() }
+
+    macosX64()
+    iosArm64(); iosX64()
+    watchosArm32(); watchosArm64()
+
+    configure(targets) { configureMavenPublication() }
+    common {
+        "darwin" {
+            "macosX64"()
+            "iosArm64"(); "iosX64"()
+            "watchosArm32"(); "watchosArm64"()
         }
-    }
-}
-
-afterEvaluate {
-    publishing {
-        setupAllPublications(project)
-    }
-
-    bintray {
-        setupPublicationsUpload(project, publishing, skipMetadataPublication = true)
+        "commonTest" {
+            dependencies {
+                implementation(project(":test-helpers"))
+            }
+        }
+        "androidUnitTest" {
+            dependencies {
+                implementation(Kotlin.test)
+                implementation(AndroidX.test.runner)
+                implementation(Testing.robolectric)
+            }
+        }
     }
 }

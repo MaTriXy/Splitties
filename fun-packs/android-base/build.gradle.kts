@@ -1,31 +1,33 @@
-@file:Suppress("SpellCheckingInspection")
-
 /*
- * Copyright 2019 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2019-2021 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
  */
+
+@file:Suppress("SpellCheckingInspection")
 
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
-    `maven-publish`
-    id("com.jfrog.bintray")
+    publish
 }
 
 android {
     setDefaults()
+    namespace = "splitties.fun.pack.android.base"
 }
 
 kotlin {
-    metadataPublication(project)
-    androidWithFunPackPublication(project)
+    androidTarget()
+
+    configure(targets) { configureMavenPublication() }
     sourceSets {
-        getByName("androidMain").dependencies {
+        androidMain.dependencies {
             listOf(
                 "activities",
                 "appctx",
                 "bitflags",
                 "bundle",
                 "collections",
+                "coroutines",
                 "dimensions",
                 "fragments",
                 "fragmentargs",
@@ -46,15 +48,5 @@ kotlin {
                 "views-selectable-constraintlayout"
             ).forEach { api(splitties(it)) }
         }
-    }
-}
-
-afterEvaluate {
-    publishing {
-        setupAllPublications(project)
-    }
-
-    bintray {
-        setupPublicationsUpload(project, publishing, skipMetadataPublication = true)
     }
 }

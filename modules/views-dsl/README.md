@@ -2,6 +2,8 @@
 
 *Create UIs with readable Kotlin code.*
 
+Supported platforms: **Android**.
+
 There's a whole document about [Views DSL vs xml layouts](Kotlin-UIs-vs-xml-layouts.md)
 if you are not convinced yet.
 
@@ -17,7 +19,33 @@ Splitties Views DSL has been designed to be:
 * Reliable
 * Flexible
 
-That's 7 key considerations, which are all necessary to make a great library.
+That's 7 key considerations, which we believe are all necessary to make a great library.
+
+## Setup
+
+If you want to use this dependency without using one of the [fun packs](../../README.md#download),
+you can use `Splitties.viewsDsl`, provided you have [refreshVersions](https://github.com/jmfayard/refreshVersions) added to the project.
+
+For reference, the maven coordinates of this module are `com.louiscad.splitties:splitties-views-dsl`.
+
+## What about Jetpack Compose?
+
+We think that Jetpack Compose is really great and is definitely the future of UI development.
+
+Regarding the present though, as of September of the year 2020, APIs based on `android.view.View`
+are still the foundation that powers nearly all Android apps, and that API is already stable, unlike
+Jetpack Compose that is currently in alpha. Splitties Views DSL is as stable as its foundation,
+its API hasn't changed since 2018 and there's no plan on breaking changes.
+
+Splitties Views DSL has a seamless interoperability with existing Views and xml layout, maybe more
+seamless than Jetpack Compose.
+
+To sum it up, Splitties is a great way to use Kotlin in your UI code with an API you already know,
+plus extensions provided by Splitties Views DSL to cut down on boilerplate while Jetpack Compose
+stabilizes (which should complete sometime in 2021).
+
+If you have any further questions on this topic, feel free to ask it in the `#splitties` channel of
+the Kotlin's Slack or in the issues here on GitHub.
 
 ## Introduction
 
@@ -84,6 +112,12 @@ probably already familiar to you._
   * [Simple examples](#simple-examples)
   * [Possibilities brought by the `Ui` interface](#possibilities-brought-by-the-ui-interface)
     * [IDE Preview](#ide-preview)
+      * [IDE Preview Example](#ide-preview-example)
+      * [Important info regarding xml based IDE Preview](#important-info-regarding-xml-based-ide-preview)
+        * [Interfaces parameters](#interfaces-parameters)
+        * [Known issues and their workaround](#known-issues-and-their-workaround)
+        * [Finding a suitable constructor to instantiate your UI](#finding-a-suitable-constructor-to-instantiate-your-ui)
+        * [Finding the class](#finding-the-class)
     * [Modular user interface contracts](#modular-user-interface-contracts)
     * [Easier multi form factors support](#easier-multi-form-factors-support)
     * [Multiplatform user interface contracts](#multiplatform-user-interface-contracts)
@@ -91,7 +125,6 @@ probably already familiar to you._
     * [Redesign](#redesign)
     * [A/B Testing](#ab-testing)
 * [Additional modules](#additional-modules)
-* [Download](#download)
 
 ## The extensions
 
@@ -123,7 +156,7 @@ Both overloads allow the following 3 **optional** parameters:
 you declared it in xml, [as done in the sample](../../samples/android-app/src/androidMain/res/values/view_ids.xml)
 * `@StyleRes theme: Int`, resource of a theme overlay that will be applied to
 the View. Example argument: `R.style.AppTheme_AppBarOverlay`
-* `initView: V.() -> Unit`, a lambda that is like `apply` for the created View. 
+* `initView: V.() -> Unit`, a lambda that is like `apply` for the created View.
 
 **The first overload** of `view` takes a required first parameter that is a function
 taking a `Context`, and returning a `View`. Since constructors are also
@@ -180,7 +213,7 @@ one for `Context`. Also, remember to make them inline to avoid lambda allocation
 
 #### Using styles defined in xml
 
-There are some times where you need to use an xml defined style,
+There are some times when you need to use an XML defined style,
 such as when using a style defined in AppCompat like `Widget_AppCompat_Button_Colored`.
 
 Splitties makes it really easy to use xml styles defined in Android, AppCompat and Material Components.
@@ -325,8 +358,11 @@ That's why this split has an **inline** alias to it named just `add(…)` for `V
 It has the extra benefit of returning the passed `View`, which can be handy in some
 situations.
 
-The `ViewGroup.add(…)` function requires an instance of `ViewGroup.LayoutParams`,
-see how Splitties helps instantiating it with minimal, yet explicit code.
+The `ViewGroup.add(…)` function requires an instance of `ViewGroup.LayoutParams`.
+See in the next section how Splitties helps instantiate it with minimal, yet explicit code.
+
+The `add` function also has 2 overloads that take either a `beforeChild` or an `afterChild`
+argument, handy when the order of Views matters or when adding views dynamically.
 
 #### ViewGroups extension functions to instantiate LayoutParams
 
@@ -380,7 +416,7 @@ To avoid this issue, you can be alert when you're typing/auto-completing `lParam
 you're in (direct parent of the child View you are adding).
 
 #### Other extensions for `ViewGroup`
- 
+
 * `wrapContent` and `matchParent` inline extensions properties on
 `ViewGroup` are convenience aliases to `ViewGroup.LayoutParams.WRAP_CONTENT`
 and `ViewGroup.LayoutParams.MATCH_PARENT`.
@@ -392,7 +428,7 @@ and fix the inconsistent name ordering (`leftMargin`, but `marginStart`?).
 
 ## The interface for user interfaces, named `Ui`
 
-This section doesn't just writes so many words about how **the `Ui` interface
+This section doesn't just write so many words about how **the `Ui` interface
 has only 2 properties**. It explains why **it is useful**, how to **use it the right
 way**, and the **possibilities** it offers.
 
@@ -408,7 +444,7 @@ interface Ui {
 ### Why this interface
 
 As said above, you can put your UI code directly in an `Activity` or a `Fragment`,
-but the fact you can doesn't mean you should. Mixing UI code with business logic,
+but the fact that you can, doesn't mean that you should. Mixing UI code with business logic,
 data storage code, network calls and miscellaneous boilerplate in the same
 "god" class will quickly make further work (like feature additions and maintenance)
 very hard, because you're likely not a god programmer, and even if you are, your
@@ -481,8 +517,143 @@ and [`DemoActivity`](
 
 #### IDE Preview
 
-You can preview `Ui` implementations in the IDE. [See the
-Views DSL IDE preview split](../views-dsl-ide-preview/README.md).
+With the `UiPreView` class, you can preview your `Ui` implementations right from the IDE,
+(requires Android Studio 4.0 or newer).
+
+You can do it in code and have access to it contextually by selecting the "Split" or "Design" view
+in the top right corner of the editor, or you can do it in xml and benefit from options not yet
+available in `View` subclasses preview such as configuration switching (night mode, locale, etc.).
+
+While the real app might show actual data, you'll likely want to show sample data in the IDE
+preview. To support this use case in the best way possible such as there's no impact on the
+production code, Splitties brings the `isInPreview` inline extension property for `Ui` and `View`.
+
+When your app is compiled in release mode, it evaluates to `false` as a constant value
+(unlike `View.isInEditmode`), which means that any code path under this condition will be removed by
+the compiler (kotlinc), and R8 or proguard will then remove any extra code that was only used in
+the IDE preview.
+
+##### IDE Preview Example
+
+Below is a preview example in Kotlin that the IDE can display.
+
+```kotlin
+//region IDE preview
+@Deprecated("For IDE preview only", level = DeprecationLevel.HIDDEN)
+private class MainUiImplPreview(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : UiPreView(
+    context = context.withTheme(R.style.AppTheme),
+    attrs = attrs,
+    defStyleAttr = defStyleAttr,
+    createUi = { MainUiImpl(it) }
+)
+//endregion
+```
+
+It is surrounded by a "region" so it can be collapsed by the IDE as you can see in the
+screenshot just below.
+
+![Example screenshot](Splitties%20View%20DSL%20IDE%20preview%20kotlin%20example.png)
+
+Below is a preview xml layout example that the IDE can display.
+It assumes there's a class implementing `Ui` named `MainUi` in the `main`
+subpackage (relative to the app/library package name).
+
+Beware that for the xml approach, any refactoring changes will not be reflected in the xml file,
+so if you change the package or the name of your `Ui` implementation class, you'll have to
+remember to edit the xml preview too to keep it working.
+
+```xml
+<splitties.views.dsl.idepreview.UiPreView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:splitties_class_package_name_relative="main.MainUi"/>
+```
+
+Here's a screenshot of how it looks like with [DemoUi from the sample](
+../../samples/android-app/src/androidMain/kotlin/com/example/splitties/demo/DemoUi.kt) after the
+`mergeDebugJavaResource` gradle task has been run:
+
+![Example screenshot](Splitties%20View%20DSL%20IDE%20preview%20xml%20example.png)
+
+##### Important info regarding xml based IDE Preview
+
+###### Interfaces parameters
+
+In order for the xml preview to work, your `Ui` subclass need to have its first parameter of type `Context`.
+For the subsequent parameters (if applicable), any `interface` is supported, but its methods need to
+not be called when this view is created and drawn, or an exception will be thrown.
+
+A special support has been added for `CoroutineContext` and `CoroutineScope`, so there's no
+exception thrown if you use an `actor` or other code relying on coroutines at init or drawing time.
+
+###### Known issues and their workaround
+
+* If preview doesn't work or doesn't reflect the latest changes, it's likely
+because you didn't execute the `mergeDebugJavaResource` gradle task on your project (module actually).
+IDE preview currently only works with compiled classes and xml layouts. Running the
+`mergeDebugJavaResource` gradle task will save you time as it doesn't involve all the subsequent tasks
+that package a full apk.
+
+###### Finding a suitable constructor to instantiate your UI
+
+`UiPreView` is compatible with `Ui` implementations with two kind of
+constructors:
+* Constructors with a single `Context` parameter.
+* Constructors whose first parameter is a `Context` and other parameters are
+interfaces. Note that the interface methods need to not be called during
+preview, or an `UnsupportedOperationException` will be raised because
+`UiPreView` can only create stub implementations. You can use
+`View.isInEditMode` to skip code for preview if really needed.
+
+###### Finding the class
+
+When using the `splitties_class_package_name_relative` attribute, the
+`UiPreView` class will take the `packageName` returned from the `Context`
+and append a dot plus the value of the attribute to get the class name of
+your `Ui` implementation.
+
+However, you may have configured your build so your debug buildType has an
+applicationId suffix that is usually `.debug` like show in the example below:
+```groovy
+buildTypes {
+    debug {
+        applicationIdSuffix ".debug" // This changes the packageName returned from a Context
+        versionNameSuffix "-DEBUG"
+    }
+    release {
+        // Config of your release build
+    }
+}
+```
+That's why by default, the
+`UiPreView` class will drop any `.debug` suffix found in the package name
+before trying to instantiate the class. If you use another suffix, or have
+other suffixes for other debuggable buildTypes, or use productFlavors, you're
+in luck! The package name suffix to drop is configurable from your resources.
+
+Just copy and paste the string resource below in your project in a value resource
+file named something like `config.xml` or `do_not_translate.xml`, and edit it
+to the suffix you use:
+
+```xml
+<string name="splitties_views_dsl_ide_preview_package_name_suffix" translatable="false">.debug</string>
+```
+
+This will override the default value from the library.
+
+You can also override the `splitties_ui_preview_base_package_names` string array resource and add
+all the base package names where you have implementations of the `Ui` interface you want to preview.
+You can see such [an example in the sample here](../../samples/android-app/src/debug/res/values/splitties_ui_preview_config.xml).
+This can be handy if you change the `applicationId`, or if you have a modularized codebase.
+
+Alternatively, you can use the `splitties_class_fully_qualified_name`
+attribute instead and specify the full class name with its package.
 
 #### Modular user interface contracts
 
@@ -522,10 +693,10 @@ discussed. Also, maybe you, or someone you know, can contribute.
 
 Here's an example of how you may write multiplatform user interface contracts:
 
-In Kotlin common code, you would write an interface that is platform agnostic
+In Kotlin common code, you would write an interface that is platform-agnostic
 but declares the needed symbols that all platforms can share:
 
-Continuing our email app example, you would write these two interfaces: 
+Continuing our email app example, you would write these two interfaces:
 ```kotlin
 interface InboxUiContract {
     // Whatever you need
@@ -590,9 +761,3 @@ user interfaces right from the IDE.
 * [Material](../views-dsl-material) provides extensions for Material Components
 * [RecyclerView](../views-dsl-recyclerview) provides extensions to have
 scrollbars and proper `itemView` layout parameters.
-
-## Download
-
-```groovy
-implementation("com.louiscad.splitties:splitties-views-dsl:$splitties_version")
-```

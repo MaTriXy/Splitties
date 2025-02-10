@@ -2,6 +2,8 @@
 
 *Request runtime permissions without polluting your codebase.*
 
+Supported platforms: **Android**.
+
 The most straightforward way to request runtime permissions on Android is not… straightforward, and
 that's why there are so many libraries that attempt to make it easier.
 
@@ -12,6 +14,13 @@ That means a lot of code to write, and a lot of ways to mess up.
 Splitties Permissions leverages suspending functions, and `DialogFragment`s under the hood, to
 make requesting a permission and handling all the result cases **a single function call**.
 
+## Setup
+
+If you want to use this dependency without using one of the [fun packs](../../README.md#download),
+you can use `Splitties.permissions`, provided you have [refreshVersions](https://github.com/jmfayard/refreshVersions) added to the project.
+
+For reference, the maven coordinates of this module are `com.louiscad.splitties:splitties-permissions`.
+
 ## Included functions
 
 Top-level functions:
@@ -20,7 +29,8 @@ Top-level functions:
 | -------- | ---------------
 | `hasPermission` | Returns true if the passed runtime permission is granted to the current app.
 | `requestPermission` | Requests the passed permission if needed and returns the result.
-| `ensurePermission` | Requests the passed permission, taking the user to app details in settings if needed and returns only if granted.
+| `ensurePermission` | Requests the passed permission, taking the user to app details in settings if needed and returns only once granted.
+| `ensureAllPermissions` | Requests the passed permissions, taking the user to app details in settings if needed and returns only once all are granted.
 
 Extension functions:
 
@@ -28,8 +38,10 @@ Extension functions:
 | -------- | ---------------
 | `Fragment.requestPermission` | Requests the passed permission if needed and returns the result.
 | `FragmentActivity.requestPermission` | Requests the passed permission if needed and returns the result.
-| `Fragment.ensurePermission` | Requests the passed permission, taking the user to app details in settings if needed and returns only if granted.
-| `FragmentActivity.ensurePermission` | Requests the passed permission, taking the user to app details in settings if needed and returns only if granted.
+| `Fragment.ensurePermission` | Requests the passed permission, taking the user to app details in settings if needed and returns only once granted.
+| `Fragment.ensureAllPermissions` | Requests the passed permissions, taking the user to app details in settings if needed and returns only once all are granted.
+| `FragmentActivity.ensurePermission` | Requests the passed permission, taking the user to app details in settings if needed and returns only once granted.
+| `FragmentActivity.ensureAllPermissions` | Requests the passed permissions, taking the user to app details in settings if needed and returns only once all are granted.
 
 ## Usage
 
@@ -45,9 +57,3 @@ the do not ask again checkbox.
 You can see how to easily implement a higher-level overload that suits the UX you want to provide
 for permissions requests with [that example](../../samples/android-app/src/androidMain/kotlin/com/example/splitties/extensions/permissions/SampleEnsurePermission.kt),
 and you can see how it is used in [PermissionsExampleActivity](../../samples/android-app/src/androidMain/kotlin/com/example/splitties/permissions/PermissionsExampleActivity.kt).
-
-## Download
-
-```groovy
-implementation("com.louiscad.splitties:splitties-permissions:$splitties_version")
-```

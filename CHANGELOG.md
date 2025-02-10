@@ -1,12 +1,534 @@
 # Change log for Splitties
 
+## Version 3.0.0 (2021-08-20)
+
+Compiled with Kotlin 1.5.21 and kotlinx.coroutines 1.5.1-native-mt.
+
+Finally! Splitties 3.0.0 is there, and it's ready to keep iterating.
+
+The last 2.x version, the 2.1.1 dates back from 2018-11-25, close to 3 years ago.
+Why did it take so long to have version 3.0.0?
+
+Let's say making a multi-modules, multiplatform library isn't full of easy and straightforward steps.
+A blog post (my first!) will be published later to share that experience from start to now.
+Feel free to click follow on [blog.louiscad.com](https://blog.louiscad.com), or [on Twitter](https://twitter.com/Louis_CAD) to know when the story is published.
+
+I'll also share a roadmap for Splitties there, which I hope will get you excited for your future endeavors.
+
+Let's get into the actual content of this release:
+
+### Documentation updates and improvements, and website
+
+In case you missed it, Splitties now has a website, happily powered by [Material for MKDocs](https://squidfunk.github.io/mkdocs-material/). The address is [splitties.louiscad.com](https://splitties.louiscad.com).
+
+The main page shows a better overview of what Splitties is about, and its content. It should be helpful for newcomers.
+
+The setup info for each module is now upfront in their respective doc pages, be it on the website, or on GitHub, and they have been updated to recommend using the dependency notations from [refreshVersions](https://github.com/jmfayard/refreshVersions), which will also help you update Splitties, along with other libraries, and all that in less time.
+
+Full disclosure: I am working on refreshVersions myself, in close collaboration with its author, Jean-Michel Fayard. I use it, and I totally recommend it for all Gradle projects. Splitties is using it of course.
+
+### Bit Flags
+
+#### Changed
+
+The `hasFlag`, `withFlag`, and `minusFlag` extensions for unsigned integers (`UByte`, `UShort`, `UInt`, and `ULong`) are no longer annotated with the `@ExperimentalUnsignedTypes` annotation.
+
+### Preferences
+
+#### Added
+
+There's a new `DataStorePreferences` class for the Android side, which you can use as a substitute of the `Preferences` class. _If you were already using `SuspendPrefsAccessor`, that's all you need to change._
+
+This AndroidX DataStore backed implementation should remove the risks of your app and their users being affected by the potential performance issues of Android platform's `SharedPreferences`.
+Be sure to check out [the updated docs](modules/preferences/README.md)!
+
+## Version 3.0.0-rc03 (2021-08-06)
+
+Compiled with Kotlin 1.5.21 and kotlinx.coroutines 1.5.1-native-mt.
+
+### App Context
+
+#### Added
+
+The `AppCtxInitializer` class is now public, so you can put it in the list of dependencies of your own [AndroidX App Startup](https://developer.android.com/topic/libraries/app-startup) Initializer in case it relies on `appCtx` to be initialized.
+
+### Resources
+
+#### Fix
+
+In 3.0.0-rc02, changes in `styledColorSL` made it break when the theme attribute was pointing to a color resource that had no selector (i.e. a non inlined plain color code like `#00bbff`). This has now been fixed, and the code also got simpler.
+
+## Version 3.0.0-rc02 (2021-08-03)
+
+Compiled with Kotlin 1.5.21 and kotlinx.coroutines 1.5.1-native-mt.
+
+### Resources
+
+#### Fixes
+
+By resolving a subtle issue that could break IDE preview, the version 3.0.0-alpha07 of Splitties also broke the `styledColor` function and some other in come cases. If you had a color theme attribute and had a theme that was setting its value, pointing to another color resource, you'd be in luck. However, if the color value was set inline, right into the theme, it'd crash ([as you can see in this issue](https://github.com/LouisCAD/Splitties/issues/258)). This release fixes this kind of problem for all the
+affected functions:
+- `styledColor`
+- `styledColorSL`
+- `styledDimen`
+- `styledDimenPxSize`
+- `styledDimenPxOffset`
+- `styledBool`
+- `styledInt`
+- `styledTxt`
+- `styledStr`
+
+## Version 3.0.0-rc01 (2021-08-01)
+
+Compiled with Kotlin 1.5.21 and kotlinx.coroutines 1.5.1-native-mt.
+
+This release removes previously deprecated code.
+
+**Make sure you don't have transitive dependencies that relied on deprecated code from a previous release of Splitties!** If that's the case, you'll see the host app crash at runtime.
+
+### Removed
+
+The "Init provider" split has been removed and is no longer published starting with this release.
+
+You can find if you are using it by searching for its maven coordinates:
+`com.louiscad.splitties:splitties-initprovider` (the "Find in Path" IDE option can help you locate it).
+
+If you used it, you'll need to move to [AndroidX App Startup](https://developer.android.com/topic/libraries/app-startup).
+
+All the other previously deprecated symbols at hidden level have been removed.
+This completes the deprecation cycle for the upcoming Splitties 3.0.0 release.
+
+## Version 3.0.0-beta06 (2021-08-01)
+
+Compiled with Kotlin 1.5.21 and kotlinx.coroutines 1.5.1-native-mt.
+
+This release is advancing deprecation cycles further before the upcoming 3.0.0 release.
+
+## Deprecation cycle
+
+All previously deprecated symbols were either removed, or hidden:
+
+- Error → Hidden
+- Hidden → _Removed_
+
+## Version 3.0.0-beta05 (2021-08-01)
+
+Compiled with Kotlin 1.5.21 and kotlinx.coroutines 1.5.1-native-mt.
+
+This release is advancing deprecation cycles before the upcoming 3.0.0 release.
+
+## Deprecation cycle
+
+All previously deprecated symbols were either removed, or moved one step closer to it:
+
+- Warning → Error
+- Error → Hidden
+- Hidden → _Removed_
+
+## Version 3.0.0-beta04 (2021-07-30)
+
+Compiled with Kotlin 1.5.21 and kotlinx.coroutines 1.5.1-native-mt.
+
+### Fix
+
+Fix iOS/multiplatform publication (see [issue #280](https://github.com/LouisCAD/Splitties/issues/280)).
+
+## Version 3.0.0-beta03 (2021-07-17)
+
+Compiled with Kotlin 1.5.21 and kotlinx.coroutines 1.5.1-native-mt.
+
+Other transitive dependencies have also been upgraded to the latest stable version.
+
+It includes upgrades to various AndroidX libraries, Material Design Components 1.4.0, and Stetho 1.6.0.
+
+This release is advancing deprecation cycles before the upcoming, long awaited 3.0.0 release.
+
+### Coroutines
+
+#### Deprecations
+
+The `SendChannel.offerCatching` has been deprecated in favor of `trySend` from kotlinx.coroutines 1.5+
+
+The deprecation level of `awaitCancellation()` has been raised from warning to error. Use the one from kotlinx.coroutines instead.
+
+#### Lifecycle coroutines
+
+#### Deprecations
+
+`Dispatchers.MainAndroid` deprecation level has been raised from warning to error. Using `Dispatchers.Main` is fine performance wise since kotlinx.coroutines 1.3.3.
+The `PotentialFutureAndroidXLifecycleKtxApi` annotation deprecation level was also raised to error.
+
+The following symbols that were previously deprecated at error level are now hidden and will be removed in the next release:
+- `Lifecycle.coroutineScope`
+- `Lifecycle.job`
+- `LifecycleOwner.lifecycleScope`
+- `MainDispatcherPerformanceIssueWorkaround`
+
+### Preferences
+
+#### Deprecations
+
+Raise the deprecation level of the implicit key delegates from warning to error.
+
+### Resources
+
+#### Deprecations
+
+Raise the deprecation level of `Context.withStyledAttributes` to error.
+
+### Views AppCompat
+
+#### Deprecations
+
+Raise the deprecation level of `ActionBar.showHomeAsUp` to error.
+
+## Version 3.0.0-beta02 (2021-07-08)
+
+Compiled with Kotlin 1.4.32 and kotlinx.coroutines 1.4.3-native-mt.
+
+This is the first release of Splitties that is published on MavenCentral!
+The maven coordinates are the same.
+
+Also, there's now a documentation website on [splitties.louiscad.com](https://splitties.louiscad.com), check it out!
+
+### Alert Dialog
+
+Add "calls in place exactly once" contracts for the lambdas of all the `alertDialog` functions.
+
+### Alert Dialog AppCompat
+
+Add "calls in place exactly once" contracts for the lambdas of all the `alertDialog` functions.
+
+### Alert Dialog AppCompat Coroutines
+
+Fix rare crash that could happen when waiting for a button click if multiple ones were clicked simultaneously.
+
+Now, only the first one to be considered clicked by the system will trigger, and the second one will be ignored.
+
+### Alert Dialog Material
+
+Add "calls in place exactly once" contracts for the lambdas of all the `materialAlertDialog` functions.
+
+### App Context
+
+Replace the initializing `ContentProvider` with AndroidX App Startup.
+
+### Coroutines
+
+Deprecate `awaitCancellation()` in favor of the one now included right into kotlinx.coroutines.
+
+### Lifecycle Coroutines
+
+Introduce the `whileStarted(Lifecyle)` extension function for `Flow` to have a flow emit values only while the passed `Lifecycle` is started.
+
+### Stetho Init
+
+Replace the initializing `ContentProvider` with AndroidX App Startup.
+
+## Version 3.0.0-beta01 (2020-09-14)
+
+Compiled with Kotlin 1.4.10 and kotlinx.coroutines 1.3.9-native-mt.
+
+This release has **multiplatform** splits compatible with iOS, macOS and watchOS projects that use Kotlin/Native 1.4.0 and 1.4.10.
+Feedback is appreciated (Twitter, Kotlin's Slack, GitHub issues…).
+
+### Platforms added
+
+watchOS support has been added to the following [splits](README.md#what-is-a-split "What is a split in Splitties?"):
+- [Bit Flags](modules/bitflags)
+- [Collections](modules/collections)
+- [Coroutines](modules/coroutines)
+- [Main Thread](modules/mainthread)
+- [Preferences](modules/preferences)
+
+All CPU architectures are supported (arm32, arm64 & X86 for simulator).
+
+### Arch Room
+
+#### Deprecated
+
+Deprecated the `transaction` and `inTransaction` extension functions in favor of `withTransaction` (Room KTX) and `runInTransaction` (Room runtime) itself.
+
+### Init Provider
+
+#### Changed
+
+Now requires to opt-in to `@ObsoleteContentProviderHack`.
+This split will be deprecated once [App Startup from AndroidX](https://developer.android.com/topic/libraries/app-startup) goes stable.
+
+### Lifecycle Coroutines
+
+#### Deprecated
+
+Deprecated symbols now have error level. Next release will remove them.
+
+#### Removed
+
+- `LifecycleOwner.coroutineScope` that was at error deprecation level. Use `LifecycleOwner.lifecycleScope` from AndroidX instead.
+
+### Toast
+
+#### Changed
+
+Using this API now requires to opt-in to `@UnreliableToastApi` so the developers acknowledge
+the gotchas of `android.widget.Toast` or use something else (like snackbars, banners or dialogs).
+
+### Views
+
+#### Added
+
+Add the following read/write extensions properties for `View`:
+- `startPadding`
+- `endPadding`
+- `leftPadding`
+- `rightPadding`
+
+#### Changed
+
+The `onClick` parameter changed from a `crossinline` lambda to a `View.OnClickListener` now
+that Kotlin 1.4 brings SAM conversion for Kotlin functions taking SAM Java interfaces.
+Usage should not change. Note that there is now an implicit `it` parameter of type `View` that
+might break existing code if an outer `it` was used in the `onClick` lambda.
+
+### Views DSL
+
+#### Changed
+
+All lambdas in `AndroidStyles` now have a contract. That allows you to initialize `val`s declared in the outer scope.
+
+### Views DSL AppCompat
+
+#### Changed
+
+- Only instantiate AppCompat version of Android widgets if the current theme inherits
+an AppCompat theme.
+- All lambdas in `AppCompatStyles` now have a contract. That allows you to initialize `val`s declared in the outer scope.
+
+#### Added
+
+Add the missing AppCompat version of `ToggleButton`.
+
+### Views DSL Material
+
+#### Changed
+
+- Only instantiate Material Components version of Android widgets if the current theme inherits
+a material theme.
+- All lambdas in `MaterialComponentsStyles` now have a contract. That allows you to initialize `val`s declared in the outer scope.
+
+#### Added
+
+Add the following missing Material Components counterparts of Android widgets:
+`CheckBox`, `RadioButton`, `TextView`, `AutoCompleteTextView`.
+
+
+## Version 3.0.0-alpha07 (2020-09-01)
+
+Compiled with Kotlin 1.3.72 and kotlinx.coroutines 1.3.8.
+
+**This release introduces 2 new splits:**
+- [Alert Dialog Material](modules/alertdialog-material) (Android only) It is included in the "Android Material Components" fun pack. Thanks @ivoberger for the contribution!
+- [Coroutines](modules/coroutines) (supports macOS, iOS, JS, JVM & Android) It is included in the "Android base" fun pack.
+
+### Alert Dialog and Alert Dialog AppCompat
+
+#### Added
+
+Add `isCancellable` parameter (defaults to `true`, as when unspecified) to `alertDialog` builders.
+
+### Arch Lifecycle
+
+#### Added
+
+- `viewModels { … }` for `FragmentActivity` and `Fragment`
+- `activityViewModels { … }` for `Fragment`
+
+#### Changed
+
+This split no longer depends on the `androidx.lifecycle:lifecycle-extensions` artifact that has been deprecated in AndroidX Lifecycle 2.2.0 and is no longer published in later versions.
+
+#### Deprecated
+
+AndroidX Lifecycle KTX artifacts caught up with features that this split originally provided, so we've deprecated that overlap:
+
+- `activityScope()` for `Activity` -> `viewModels()`
+- `activityScope()` for `Fragment` -> `activityViewModels()`
+- `fragmentScope()` for `Fragment` -> `viewModels()`
+
+Also, we provided variants of these that took a lambda. Since AndroidX doesn't provide such a facility, they have been kept, but the old naming has been deprecated to match the AndroidX naming.
+
+_Note that these changes provide a ReplaceWith clause for easy migration._
+
+**Important:** Next alpha release will move the deprecation level to error, and the alpha release after will remove them completely. (So it's best to not skip this update if you were using these extensions.)
+
+### Collections
+
+#### Added
+
+`forEachReversedWithIndex` extension for `List` now has an `allowSafeModifications` parameter.
+When set to `true` (default is `false`), you can mutate the list as long as it doesn't prevent the
+next iteration from happening (or that you perform a non local return to stop iterating altogether).
+
+_As usual, unsafe operations while iterating a list can result in a `ConcurrentModificationException`
+or in an `IndexOutOfBoundsException` to be thrown._
+
+### Dimensions
+
+#### Changed
+
+The `dip` and `dp` functions now return the type of their argument (`Int` or `Float`).
+_You'll need to migrate usages of the previous `dp` function, so they pass a `Float`. Use "Find in Path" in the IDE to find them before fixing. If you often passed the same value to `dp`, the "Replace in Path" IDE option can save you even more time._
+
+### Lifecycle Coroutines
+
+#### Added
+
+- `Lifecycle.isStartedFlow()`
+- `Lifecycle.isStartedFlow(timeout: Duration)`
+- `Lifecycle.isResumedFlow()`
+- `Lifecycle.isResumedFlow(timeout: Duration)`
+- `Lifecycle.stateFlow(): Flow<Lifecycle.State>`
+
+#### Changed
+
+The following extension functions for `Lifecycle` have been promoted to `@ExperimentalSplittiesApi` (from `@PotentialFutureAndroidXLifecycleKtxApi`):
+- `createScope`
+- `createJob`
+- `awaitResumed`
+- `awaitStarted`
+- `awaitCreated`
+- `awaitState`
+
+#### Deprecated
+
+`Dispatchers.MainAndroid` is no longer needed and has been deprecated since the performance issue that affected `Dispatchers.Main` has been fixed since kotlinx.coroutines `1.3.3`.
+
+The following extension properties have been deprecated because they are now provided by AndroidX Lifecycle Runtime KTX:
+- `Lifecycle.coroutineScope`
+- `LifecycleOwner.lifecycleScope`
+
+`Lifecycle.job` has also been deprecated even though there's no as-concise replacement because it doesn't satisfy a common use case.
+
+### Main Thread
+
+#### Added
+
+Now supports macOS, iOS and JS.
+
+### Material Lists
+
+#### Changed
+
+- Ensure all `TextView`s in the list items are at least one line tall, even if the text is empty.
+- Support enabled/disabled state by making child views duplicate parent state.
+
+### Permissions
+
+#### Added
+
+New `ensureAllPermissions` function available in top-level and as extension for `FragmentActivity` and `Fragment` to request multiple permissions in a row and ensure you have them all granted.
+
+### Preferences
+
+#### Added
+
+- Now supports macOS and iOS (backed by `NSUserDefaults`, but supports custom implementation too, just like on Android).
+- Added `preferences` property to `PrefDelegate`s.
+- Added `key` property to `PrefDelegate`s.
+- Added `valueFlow()` function to `PrefDelegate`s to get current value and changes of a pref field.
+
+#### Changed
+
+- The `availableAtDirectBoot` parameter has been renamed to `androidAvailableAtDirectBoot`.
+- The `XxxPref` classes (e.g. `BoolPref`, `StringPref`, etc.) are no longer inner classes but are now part of the `PrefDelegate` sealed class hierarchy.
+
+### Resources
+
+#### Added
+
+- New `resolveThemeAttribute` extension function for `Context`. This is the replacement for `withStyledAttributes`.
+
+#### Deprecated
+
+- `withStyledAttributes` must be replaced by new `resolveThemeAttribute` that also has an implementation that is working reliably in IDE Preview. It will be removed in a future release.
+
+### Snackbar
+
+#### Changed
+
+- The `snack`, `longSnack` and `snackForever` extension functions now work with any `View` instead of just `CoordinatorLayout`.
+
+### System Services
+
+#### Added
+- Add `biometricManager` from API 29.
+- Add `roleManager` from API 29.
+
+### Views AppCompat
+
+#### Added
+
+- `configActionBar` extension function for `AppCompatActivity`.
+- `homeAsUp` extension read/write property for `ActionBar`.
+
+#### Changed
+
+- `ActionBar.showTitle` now supports reading current value.
+- `ActionBar.showHome` now supports reading current value.
+- `ActionBar.useLogo` now supports reading current value.
+- `ActionBar.showCustomView` now supports reading current value.
+
+#### Deprecated
+- `ActionBar.showHomeAsUp` has been deprecated and must be replaced by `homeAsUp`. It will be removed in a future release.
+
+### Views Coroutines & Views Coroutines Material
+
+#### Bug fixes
+
+- Fix a very rare crash that would occur when performing two clicks or long clicks in a row (e.g. by calling `performClick` twice without a UI thread dispatch) when using `View.awaitOneClick()`, `View.awaitOneLongClick()` or `FloatingActionButton.showAndAwaitOneClickThenHide()`.
+
+### Views DSL
+
+#### Added
+
+- `UiPreView` is now included by default, the extra "Views DSL IDE Preview" module is no longer needed. If you never use it in your production code, R8 should remove it from your release app. This has been done to simplify setup.
+- The `isInPreview` extension properties for `Ui` and `View` allow you to condition content to show based on whether it's the actual app or the IDE preview. Note that it statically evaluates to `false` in release builds (unlike `View.isInEditmode`), so the compiler will remove any code placed in the branch of an `if (isInPreview)` condition, and will allow R8 to remove any code that was only used in IDE preview.
+- There's 2 new overloads of the `ViewGroup.add` extension functions that take either a `beforeChild` or an `afterChild` parameter. You must use the parameter name to call one of these overloads. It comes handy in `ViewGroup`s where the order of the child `View`s matters (e.g. `FrameLayout` and `LinearLayout`).
+- `space` to create an `android.widget.Space` from a `Ui`, a `View` or a `Context` reference. Thanks to @Miha-x64 for the contribution!
+
+#### Changed
+
+- `UiPreView` now shows known error cases in the preview itself with a red warning triangle icon.
+
+### Views DSL ConstraintLayout
+
+#### Added
+
+- Add new extensions: `above`, `below`, `before` and `after` for `ConstraintLayout.LayoutParams`.
+
+### Views DSL Material
+
+#### Added
+
+Add `slider`, `rangeSlider` and `shapeableImageView` extensions for `View`, `Ui` and `Context`. They can instantiate the new widgets from the version 1.2.0 of the material-components-android library.
+
+### Views DSL IDE preview
+
+**This module has been deprecated.** It will no longer published in future releases.
+
+Its content has been moved to the main "Views DSL" split.
+
+
 ## Version 3.0.0-alpha06 (2019-05-03)
+
 Compiled with Kotlin 1.3.31.
 
 ### Permissions
 Handle empty `grantResults` for permission request ([#191](https://github.com/LouisCAD/Splitties/issues/191)).
 
+
 ## Version 3.0.0-alpha05 (2019-04-29)
+
 Compiled with Kotlin 1.3.31.
 
 **This release introduces 3 new splits:**
@@ -68,6 +590,7 @@ Two set-only extensions properties have been added for `MaterialButton`:
 
 
 ## Version 3.0.0-alpha04 (2019-03-03)
+
 Compiled with Kotlin 1.3.21.
 
 ### New features
@@ -86,6 +609,7 @@ Compiled with Kotlin 1.3.21.
 
 
 ## Version 3.0.0-alpha03 (2019-02-05)
+
 Compiled with Kotlin 1.3.20.
 
 **This release introduces a new split: [Views Coroutines](modules/views-coroutines/README.md).**
@@ -139,6 +663,7 @@ This release has the following new artifact:
 
 
 ## Version 3.0.0-alpha01 (2018-12-21)
+
 This release is compiled with Kotlin 1.3.11.
 
 It is a breaking release (more details in the changes section), and the API is subject to changes
@@ -150,7 +675,7 @@ APIs that are likely to change have an experimental annotation that triggers a w
 
 All the old support library artifacts have been replaced by AndroidX ones.
 
-If your project has not migrated to AndroidX yet, please follow the quick steps below. 
+If your project has not migrated to AndroidX yet, please follow the quick steps below.
 
 <details>
 <summary>
@@ -226,6 +751,7 @@ This release removes these two artifacts:
 
 
 ## Version 2.1.1 (2018-11-25)
+
 This release is compiled with Kotlin 1.3.10.
 
 ### Changes
@@ -241,6 +767,7 @@ done in `putExtras` instead. You can see more info in the updated KDoc of these 
 
 
 ## Version 2.1.0 (2018-11-13)
+
 This release targets Android SDK 28, and splits depending on support libraries use version 28.0.0.
 
 ### Changes
@@ -251,6 +778,7 @@ design support library version 28.0.0.
 
 
 ## Version 2.0.0 (2018-11-13)
+
 This release targets Android SDK 27, and splits depending on support libraries use version 27.1.1.
 
 ### Changes
@@ -260,6 +788,7 @@ This release targets Android SDK 27, and splits depending on support libraries u
 
 
 ## Version 2.0.0-beta1 (2018-11-13)
+
 This release **breaks binary and source compatibility**.
 
 ### Kotlin 1.3.0
@@ -281,6 +810,7 @@ or beta stage.
 
 
 ## Version 2.0.0-alpha9 (2018-11-13)
+
 This release **breaks binary and source compatibility**.
 
 It renames several package names and modules, for more consistency across the project.
@@ -351,6 +881,7 @@ This release removes all these artifacts:
 
 
 ## Version 2.0.0-alpha8 (2018-11-12)
+
 This release **breaks binary compatibility**.
 
 It removes all deprecated symbols that had their deprecation level raised to error in 2.0.0-alpha7.
@@ -361,12 +892,14 @@ crash at runtime because of not found classes.
 
 
 ## Version 2.0.0-alpha7 (2018-11-12)
+
 Raise all deprecated symbols deprecation level to error.
 
 Use this version to make sure you don't use them in your projects, next version will remove them!
 
 
 ## Version 2.0.0-alpha6 (2018-11-11)
+
 Version 2.0.0-alpha5 broke the API, this version fixes this.
 
 ### Like version 2.0.0-alpha5, but without breaking the API from 2.0.0-alpha4
@@ -452,6 +985,7 @@ The `wrapInRecyclerView` extension function now accepts an optional lambda to co
 
 
 ## Version 2.0.0-alpha5 (2018-11-02)
+
 _This release is **breaking** if you come from version 2.0.0-alpha4, especially if you were using
 View DSL. It's highly recommended to directly migrate from version 2.0.0-alpha4 to 2.0.0-alpha6,
 which has a smoother migration path, and [a guide](
@@ -578,12 +1112,14 @@ This release removes these two artifacts:
 
 
 ## Version 2.0.0-alpha4 (2018-07-09)
+
 * Provide `ReplaceWith` migrations for `add` methods deprecated in version 2.0.0-alpha2.
 * Add default empty lambda for `startActivity(action: String…)` methods.
 * Compiled with Kotlin 1.2.51
 
 
 ## Version 2.0.0-alpha3 (2018-06-09)
+
 ### New features
 #### Bundle
 There are 2 new methods: `bundleOrDefault(…)` and `bundleOrElse { … }` to allow default values in
@@ -607,6 +1143,7 @@ API and have been replaced by the `ReadWriteProperty` interface.
 
 
 ## Version 2.0.0-alpha2 (2018-05-21)
+
 ### 9 new library modules (amounting to a total of 42 splits):
 - **Activities**: Start activities with minimal boilerplate
 - **Collections**: `forEach` for `List`s without `Iterator` allocation
@@ -697,6 +1234,7 @@ allProjects {
 
 
 ## Version 2.0.0-alpha1 (2018-03-11)
+
 ### 26 new library modules (amounting to a total of 33 splits):
 - **Alert Dialog**: Create simple alert dialogs with simple code
 - **Alert Dialog AppCompat**: AppCompat version of Alert Dialog
@@ -817,6 +1355,7 @@ allProjects {
 
 
 ## Version 1.3.0 (2017-04-17)
+
 ### 5 new library modules:
 - **App Context**: Have a `Context` everywhere
 - **Concurrency**: Single thread `lazy` implementations, with reporting via [Timber](
@@ -836,6 +1375,7 @@ https://material.io/guidelines/)
 
 
 ## Version 1.2 (2016-09-19)
+
 This version adds the `setHost(Host host)` method in `ViewWrapper.Binder` interface where `Host` can
 be any type you want you can use from the implementing item View to communicate with your Activity,
 Fragment, Presenter, or whatever. Note this adds a third type parameter to the `ViewWrapper` class,
@@ -843,12 +1383,14 @@ and a second one for the `ViewWrapper.Binder` class.
 
 
 ## Version 1.1 (2016-09-11)
+
 This version adds the `setViewHolder(ViewWrapper holder)` method in `ViewWrapper.Binder` interface
 so list item `View`s can now get a reference to their `ViewHolder`, and call `getAdapterPosition()`
 on it for example.
 
 
 ## Version 1.0 (2016-08-24)
+
 This is the first release of Splitties. It includes two independent modules:
 - Typesafe RecyclerView
 - Selectable ViewGroups

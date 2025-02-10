@@ -2,7 +2,7 @@
  * Copyright 2019 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
  */
 
-@file:UseExperimental(ExperimentalSplittiesApi::class)
+@file:OptIn(ExperimentalSplittiesApi::class)
 
 package splitties.views
 
@@ -13,10 +13,10 @@ import splitties.views.InputType.Class.Text
 
 @Suppress(
     "unused", //TODO: Move it on type parameter when supported in Kotlin.
-    "NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS"
 )
 @ExperimentalSplittiesApi
-inline class InputType<T : InputType.Class> @PublishedApi internal constructor(val value: Int) {
+@JvmInline
+value class InputType<T : InputType.Class> @PublishedApi internal constructor(val value: Int) {
     sealed class Class {
         object DateTime : Class()
         object Number : Class()

@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import splitties.experimental.ExperimentalSplittiesApi
+import splitties.experimental.InternalSplittiesApi
 import splitties.views.recyclerview.horizontalLayoutManager
 import splitties.views.recyclerview.verticalLayoutManager
 
-internal class SingleViewAdapter<V : View>(
+@InternalSplittiesApi
+class SingleViewAdapter<V : View>(
     private val view: V,
     vertical: Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -18,7 +20,7 @@ internal class SingleViewAdapter<V : View>(
     val layoutManager = if (vertical) verticalLayoutManager() else horizontalLayoutManager()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = view.apply {
-        @UseExperimental(ExperimentalSplittiesApi::class)
+        @OptIn(ExperimentalSplittiesApi::class)
         layoutParams = layoutManager.verticalListLayoutParams()
     }.let { object : RecyclerView.ViewHolder(it) {} }
 

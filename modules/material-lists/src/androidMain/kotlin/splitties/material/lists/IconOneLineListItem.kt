@@ -9,35 +9,31 @@ import android.text.TextUtils.TruncateAt.END
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.TextView
+import androidx.appcompat.R
 import splitties.dimensions.dip
 import splitties.resources.styledColorSL
 import splitties.views.appcompat.imgTintList
-import splitties.views.dsl.core.*
+import splitties.views.dsl.core.add
+import splitties.views.endMargin
+import splitties.views.dsl.core.imageView
+import splitties.views.dsl.core.lParams
+import splitties.views.startMargin
+import splitties.views.dsl.core.textView
+import splitties.views.verticalMargin
+import splitties.views.dsl.core.wrapContent
 import splitties.views.selectable.SelectableLinearLayout
 import splitties.views.textAppearance
 
-class IconOneLineListItem(
-    context: Context, attrs: AttributeSet?, defStyleAttr: Int = 0, disableDefaultTint: Boolean
+class IconOneLineListItem @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    disableDefaultTint: Boolean = false
 ) : SelectableLinearLayout(context, attrs, defStyleAttr) {
-    constructor(
-        context: Context
-    ) : this(context, null, disableDefaultTint = false)
-    constructor(
-        context: Context,
-        attrs: AttributeSet?
-    ) : this(context, attrs, disableDefaultTint = false)
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
-    ) : this(context, attrs, defStyleAttr, disableDefaultTint = false)
-    constructor(
-        context: Context,
-        disableDefaultTint: Boolean
-    ) : this(context, null, disableDefaultTint = disableDefaultTint)
 
     val icon = imageView {
         if (!disableDefaultTint) imgTintList = styledColorSL(android.R.attr.textColorSecondary)
+        isDuplicateParentStateEnabled = true
     }
 
     /**
@@ -46,8 +42,10 @@ class IconOneLineListItem(
      */
     val firstLine = textView {
         ellipsize = END
+        minLines = 1
         maxLines = 1
         textAppearance = R.style.TextAppearance_AppCompat_Subhead
+        isDuplicateParentStateEnabled = true
     }
 
     init {

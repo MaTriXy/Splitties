@@ -1,10 +1,11 @@
 /*
- * Copyright 2019 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2019-2021 Louis Cognault Ayeva Derman. Use of this source code is governed by the Apache 2.0 license.
  */
+
+@file:OptIn(ExperimentalContracts::class)
 
 package splitties.alertdialog
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -14,6 +15,9 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import kotlin.DeprecationLevel.HIDDEN
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 /**
  * Instantiates an [AlertDialog.Builder] for the [Context], applies the [dialogConfig] lambda to
@@ -21,6 +25,7 @@ import kotlin.DeprecationLevel.HIDDEN
  * [AlertDialog.show] on the created dialog.
  */
 inline fun Context.alertDialog(dialogConfig: AlertDialog.Builder.() -> Unit): AlertDialog {
+    contract { callsInPlace(dialogConfig, InvocationKind.EXACTLY_ONCE) }
     return AlertDialog.Builder(this)
         .apply(dialogConfig)
         .create()
@@ -35,14 +40,19 @@ inline fun Context.alertDialog(
     title: CharSequence? = null,
     message: CharSequence? = null,
     @DrawableRes iconResource: Int = 0,
+    isCancellable: Boolean = true,
     dialogConfig: AlertDialog.Builder.() -> Unit = {}
 ): AlertDialog {
-    return AlertDialog.Builder(this).apply {
-        this.title = title
-        this.message = message
+    contract { callsInPlace(dialogConfig, InvocationKind.EXACTLY_ONCE) }
+    return alertDialog(
+        title = title,
+        message = message,
+        icon = null,
+        isCancellable = isCancellable,
+    ) {
         setIcon(iconResource)
         dialogConfig()
-    }.create()
+    }
 }
 
 /**
@@ -54,33 +64,17 @@ inline fun Context.alertDialog(
     title: CharSequence? = null,
     message: CharSequence? = null,
     icon: Drawable?,
+    isCancellable: Boolean = true,
     dialogConfig: AlertDialog.Builder.() -> Unit = {}
 ): AlertDialog {
+    contract { callsInPlace(dialogConfig, InvocationKind.EXACTLY_ONCE) }
     return AlertDialog.Builder(this).apply {
         this.title = title
         this.message = message
         setIcon(icon)
+        setCancelable(isCancellable)
         dialogConfig()
     }.create()
-}
-
-/**
- * Instantiates an [AlertDialog.Builder] for the [Activity], applies the [dialogConfig] lambda to
- * it, then creates an [AlertDialog] from the builder, and returns it, so you can call
- * [AlertDialog.show] on the created dialog.
- */
-@Deprecated(
-    message = "This function is limited to Activity only and its name is not explicit enough. " +
-            "Use the alertDialog function instead.",
-    replaceWith = ReplaceWith(
-        expression = "this.alertDialog(dialogConfig)",
-        imports = ["splitties.alertdialog.alertDialog"]
-    )
-)
-inline fun Activity.alert(dialogConfig: AlertDialog.Builder.() -> Unit): AlertDialog {
-    return AlertDialog.Builder(this)
-        .apply(dialogConfig)
-        .create()
 }
 
 /**

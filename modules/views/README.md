@@ -2,6 +2,15 @@
 
 *Extensions function and properties on `View`s.*
 
+Supported platforms: **Android**.
+
+## Setup
+
+If you want to use this dependency without using one of the [fun packs](../../README.md#download),
+you can use `Splitties.views`, provided you have [refreshVersions](https://github.com/jmfayard/refreshVersions) added to the project.
+
+For reference, the maven coordinates of this module are `com.louiscad.splitties:splitties-views`.
+
 ## Content
 
 This split includes extensions on view related classes. They are helpful when
@@ -16,7 +25,7 @@ core KTX, and included the dependency transitively instead.
 
 ### View background properties
 
-`bg` is an alias to the `background` property for `View, but works below 
+`bg` is an alias to the `background` property for `View`, but works below
 API 16, using `setBackgroundDrawable(…)`.
 
 `backgroundColor` allows to set the background color of a `View` using
@@ -155,9 +164,3 @@ The `assignAndGetGeneratedId()` extension function for `View` calls
 The `existingOrNewId` extension property for `View` calls
 `assignAndGetGeneratedId()` if the view has no id (`0`/`View.NO_ID`),
 and returns the `id` of the View, existing or just generated.
-
-## Download
-
-```groovy
-implementation("com.louiscad.splitties:splitties-views:$splitties_version")
-```
